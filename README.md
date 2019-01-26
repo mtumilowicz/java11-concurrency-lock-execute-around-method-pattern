@@ -55,8 +55,8 @@ money from user to user.
     * we will use `ReadWriteLock` interface
     * we provide class that absorbs the pain of working
     with that interface (locking/unlocking tiresome obligation)
-    ```
     * we will supply action to execute in locked block
+    ```    
     @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
     @RequiredArgsConstructor
     class LockExecutor {
