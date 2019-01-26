@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/mtumilowicz/java11-concurrency-lock-execute-around-method-pattern.svg?branch=master)](https://travis-ci.com/mtumilowicz/java11-concurrency-lock-execute-around-method-pattern)
+
 # java11-concurrency-lock-execute-around-method-pattern
 Example of Execute Around Method pattern.
 
