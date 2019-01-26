@@ -44,12 +44,9 @@ money from user to user.
         }
     }
     ```
-1. Immutable map of users:
+1. Mutable map of users:
     ```
-    Map<Integer, User> userMap = Map.of(
-                1, new User(1, 40),
-                2, new User(2, 33)
-        );
+    userMap = [[1, new User(1, 40)], [2, new User(2, 33)]]
     ```
 1. We want to provide tread-safe read and writes on that map
     * we will use `ReadWriteLock` interface
@@ -90,26 +87,31 @@ second one
     ```
     ReadWriteLock lock = new ReentrantReadWriteLock();
     LockExecutor executor = new LockExecutor(lock);
-    
-    var transferred = executor.write(() -> {
+
+    executor.write(() -> {
         var transfer = PositiveInt.of(15);
-        return Map.of(1, userMap.get(1).outcome(transfer),
-                2, userMap.get(2).income(transfer));
+        userMap.replace(1, userMap.get(1).outcome(transfer));
+        userMap.replace(2, userMap.get(2).income(transfer));
+
+        return Void.class;
     });
-    
-    assertThat(transferred.get(1).getBalance(), is(25));
-    assertThat(transferred.get(2).getBalance(), is(48));
+
+    assertThat(userMap.get(1).getBalance(), is(25));
+    assertThat(userMap.get(2).getBalance(), is(48));
     ```
 1. We want to sum all balances from all users
     ```
     ReadWriteLock lock = new ReentrantReadWriteLock();
     LockExecutor executor = new LockExecutor(lock);
-    
+
     var balanceAll = executor.read(() -> userMap.values()
             .stream()
             .map(User::getBalance)
             .mapToInt(x -> x)
             .sum());
-    
+
     assertThat(balanceAll, is(73));
     ```
+    
+**Remark: thread-safety is guarantee under assumption, that
+all reads and writes will go through the same executor object.**
