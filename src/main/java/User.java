@@ -1,3 +1,4 @@
+import com.google.common.base.Preconditions;
 import lombok.Value;
 
 /**
@@ -8,11 +9,25 @@ class User {
     int id;
     int balance;
 
-    User income(int value) {
-        return new User(id, balance + value);
+    User income(PositiveInt value) {
+        return new User(id, balance + value.amount);
     }
 
-    User outcome(int value) {
-        return new User(id, balance - value);
+    User outcome(PositiveInt value) {
+        return new User(id, balance - value.amount);
+    }
+}
+
+class PositiveInt {
+    final int amount;
+
+    private PositiveInt(int amount) {
+        this.amount = amount;
+    }
+
+    static PositiveInt of(int amount) {
+        Preconditions.checkArgument(amount > 0);
+
+        return new PositiveInt(amount);
     }
 }

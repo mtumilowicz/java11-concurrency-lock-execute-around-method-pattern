@@ -23,7 +23,7 @@ public class XXXTest {
         LockExecutor executor = new LockExecutor(lock);
 
         executor.write(() -> {
-            int transfer = 15;
+            var transfer = PositiveInt.of(15);
             userMap.replace(1, userMap.get(1).outcome(transfer));
             userMap.replace(2, userMap.get(2).income(transfer));
         });
