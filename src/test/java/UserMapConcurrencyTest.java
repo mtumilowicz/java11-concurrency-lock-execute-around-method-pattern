@@ -12,8 +12,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 public class UserMapConcurrencyTest {
 
-    private Map<Integer, User> userMap = Map.of(1, new User(1, 40),
-            2, new User(2, 33));
+    private Map<Integer, User> userMap = Map.of(
+            1, new User(1, 40),
+            2, new User(2, 33)
+    );
 
     @Test
     public void write_transfer() {
