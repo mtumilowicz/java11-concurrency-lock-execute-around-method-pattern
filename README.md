@@ -13,7 +13,7 @@ of working with the `ReadWriteLock` interface.
 **The main goal**: simple implementation of transferring 
 money from user to user.
 
-1. `User` class
+1. Immutable `User` class
     ```
     @Value
     class User {
@@ -52,7 +52,7 @@ money from user to user.
     * we will use `ReadWriteLock` interface
     * we provide class that absorbs the pain of working
     with that interface (locking/unlocking tiresome obligation)
-    * we will supply action to execute in locked block
+    * we will supply action to execute in the locked block
     ```    
     @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
     @RequiredArgsConstructor
