@@ -10,7 +10,7 @@ In this project we will show how to use Execute Around Method
 of working with the `ReadWriteLock` interface.
 
 # project description
-The main goal: simple implementation of transferring 
+**The main goal**: simple implementation of transferring 
 money from user to user.
 
 1. `User` class
