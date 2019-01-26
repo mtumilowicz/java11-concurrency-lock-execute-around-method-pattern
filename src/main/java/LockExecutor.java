@@ -13,10 +13,10 @@ import java.util.function.Supplier;
 class LockExecutor {
     ReadWriteLock lock;
 
-    void write(Runnable action) {
+    <T> T write(Supplier<T> action) {
         lock.writeLock().lock();
         try {
-            action.run();
+            return action.get();
         } finally {
             lock.writeLock().unlock();
         }
