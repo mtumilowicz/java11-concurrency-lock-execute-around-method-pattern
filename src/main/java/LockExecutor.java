@@ -1,17 +1,19 @@
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.function.Supplier;
 
 /**
  * Created by mtumilowicz on 2019-01-07.
  */
-public class LockExecutor {
-    private final ReadWriteLock lock;
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
+class LockExecutor {
+    ReadWriteLock lock;
 
-    LockExecutor(ReadWriteLock lock) {
-        this.lock = lock;
-    }
-
-    public void write(Runnable action) {
+    void write(Runnable action) {
         lock.writeLock().lock();
         try {
             action.run();
@@ -20,7 +22,7 @@ public class LockExecutor {
         }
     }
 
-    public <T> T read(Supplier<T> action) {
+    <T> T read(Supplier<T> action) {
         lock.readLock().lock();
         try {
             return action.get();
