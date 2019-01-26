@@ -12,7 +12,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 /**
  * Created by mtumilowicz on 2019-01-25.
  */
-public class XXXTest {
+public class UserMapConcurrencyTest {
 
     @Test
     public void transfer() {
