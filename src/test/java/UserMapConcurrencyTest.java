@@ -1,10 +1,8 @@
 import org.junit.Test;
 
+import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -14,33 +12,34 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 public class UserMapConcurrencyTest {
 
-    @Test
-    public void transfer() {
-        var userMap = Stream.of(new User(1, 40), new User(2, 33))
-                .collect(Collectors.toMap(User::getId, Function.identity()));
+    private Map<Integer, User> userMap = Map.of(1, new User(1, 40),
+            2, new User(2, 33));
 
+    @Test
+    public void write_transfer() {
         ReadWriteLock lock = new ReentrantReadWriteLock();
         LockExecutor executor = new LockExecutor(lock);
 
-        executor.write(() -> {
+        var transferred = executor.write(() -> {
             var transfer = PositiveInt.of(15);
-            userMap.replace(1, userMap.get(1).outcome(transfer));
-            userMap.replace(2, userMap.get(2).income(transfer));
+            return Map.of(1, userMap.get(1).outcome(transfer),
+                    2, userMap.get(2).income(transfer));
         });
 
-        assertThat(userMap.get(1).getBalance(), is(25));
-        assertThat(userMap.get(2).getBalance(), is(48));
+        assertThat(transferred.get(1).getBalance(), is(25));
+        assertThat(transferred.get(2).getBalance(), is(48));
     }
 
     @Test
-    public void read() {
-        var userMap = Stream.of(new User(1, 40), new User(2, 33))
-                .collect(Collectors.toMap(User::getId, Function.identity()));
-
+    public void read_sum_balance() {
         ReadWriteLock lock = new ReentrantReadWriteLock();
         LockExecutor executor = new LockExecutor(lock);
 
-        var balanceAll = executor.read(() -> userMap.values().stream().map(User::getBalance).mapToInt(x -> x).sum());
+        var balanceAll = executor.read(() -> userMap.values()
+                .stream()
+                .map(User::getBalance)
+                .mapToInt(x -> x)
+                .sum());
 
         assertThat(balanceAll, is(73));
     }
